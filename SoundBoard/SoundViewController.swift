@@ -7,6 +7,8 @@ class SoundViewController: UIViewController {
     @IBOutlet weak var btnPlay: UIButton!
     @IBOutlet weak var txtNombreAudio: UITextField!
     @IBOutlet weak var btnAgregar: UIButton!
+    @IBOutlet weak var lblDuracion: UILabel!
+    
     var grabarAudio:AVAudioRecorder?;
     var playAudio:AVAudioPlayer?;
     var audioURL:URL?;
@@ -51,6 +53,7 @@ class SoundViewController: UIViewController {
     }
     
     @IBAction func grabarTapped(_ sender: Any) {
+        
         if grabarAudio!.isRecording {
             //Stop Recording
             grabarAudio?.stop();
@@ -58,6 +61,7 @@ class SoundViewController: UIViewController {
             btnGrabar.setTitle("GRABAR", for: .normal);
             btnPlay.isEnabled = true;
             btnAgregar.isEnabled = true;
+            
         }
         else{
             //Start recording
@@ -65,6 +69,22 @@ class SoundViewController: UIViewController {
             //Chagen button grabar's text
             btnGrabar.setTitle("DETENER", for: .normal);
             btnPlay.isEnabled = false;
+
+            // a method for update
+            func updateTime(){
+                 if grabarAudio!.isRecording{
+                     let minutes = floor(grabarAudio!.currentTime/60)
+                     let seconds = grabarAudio!.currentTime - (minutes * 60)
+                     let timeInfo = String(format: "%0.0f.%0.0f", minutes, seconds)
+                 }
+             }
+            var myTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: @selector(updateTime), userInfo: nil, repeats: true);
+            
+                /*let duracion = grabarAudio!.currentTime;
+                let minutes = floor(duracion/60);
+                let seconds = duracion - (minutes * 60);
+                lblDuracion.text = String(format: "%0.0f.%0.0f", minutes,seconds) as String;*/
+                // initWithFormat:@"%0.0f.%0.0f", minutes, seconds];
         }
     }
     

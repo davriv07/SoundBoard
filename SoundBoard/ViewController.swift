@@ -31,9 +31,20 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell();
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath);
         let grabacion = grabaciones[indexPath.row];
-        cell.textLabel?.text = grabacion.nombre;
+        var durationAudio: String;
+        do{
+            
+            let duracion = try Int(AVAudioPlayer(data: grabacion.audio! as Data).duration);
+            let minutes = duracion/60;
+            let seconds = duracion - (minutes * 60);
+            durationAudio = String(NSString(format: "%02d:%02d", minutes, seconds));
+            cell.textLabel?.text = grabacion.nombre;
+            cell.detailTextLabel?.text = "Duración: " + durationAudio;
+            cell.detailTextLabel?.tintColor = UIColor.red;
+        }
+        catch(let err){ print(err); }
         return cell;
     }
     
